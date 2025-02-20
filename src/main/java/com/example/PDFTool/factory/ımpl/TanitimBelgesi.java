@@ -1,63 +1,95 @@
 package com.example.PDFTool.factory.ımpl;
+
 import com.example.PDFTool.factory.PDFGenerator;
-import com.example.PDFTool.model.PDFContent;
+import com.example.PDFTool.model.OnurBelgesiContent;
+import com.example.PDFTool.model.TanitimBelgesiContent;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.font.PDType0Font;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+
 @Component
 public class TanitimBelgesi implements PDFGenerator {
 
     @Override
-    public byte[] generatePDF(PDFContent data) throws IOException {
+    public byte[] generateTanitimBelgesi(TanitimBelgesiContent data) throws IOException {
         //Şablonu yükleme
-        PDDocument document= PDDocument.load(new File("C:/Users/Umut/Desktop/Staj/PDFTool/src/main/resources/templates/prizma.pdf"));
+        try {
 
 
-       PDPageContentStream contentStream=new PDPageContentStream(document,document.getPage(0),true,true);
+            PDDocument document = PDDocument.load(new File("C:/Users/Umut/Desktop/Staj/PDFTool/src/main/resources/templates/tanitimbelgesi.pdf"));
 
-       //Şablon üzerine veri yazma işlemleri
-        contentStream.beginText();
-        contentStream.setFont(PDType1Font.HELVETICA, 12);
-        contentStream.newLineAtOffset(300,600);
-        contentStream.showText("Ad:"+data.getName() );
-        contentStream.endText();
+            InputStream fontStream = new ClassPathResource("templates/fonts/OpenSans-Bold.ttf").getInputStream();
+            InputStream fontStream1 = new ClassPathResource("templates/fonts/open_sans.ttf").getInputStream();
+            PDType0Font font = PDType0Font.load(document, fontStream);
+            PDType0Font font1 = PDType0Font.load(document, fontStream1);
 
-        contentStream.beginText();
-        contentStream.setFont(PDType1Font.HELVETICA, 12);
-        contentStream.newLineAtOffset(300,500);
-        contentStream.showText("Soyad:"+data.getSurname() );
-        contentStream.endText();
+            PDPageContentStream contentStream = new PDPageContentStream(document, document.getPage(0), true, true);
 
-        contentStream.beginText();
-        contentStream.setFont(PDType1Font.HELVETICA, 12);
-        contentStream.newLineAtOffset(300,400);
-        contentStream.showText("Telefon:"+data.getPhone() );
-        contentStream.endText();
+            //Şablon üzerine veri yazma işlemleri
+            contentStream.beginText();
+            contentStream.setFont(font, 16);
+            contentStream.newLineAtOffset(460, 560);
+            contentStream.showText("TANITIM BELGESİ");
+            contentStream.endText();
 
-        contentStream.beginText();
-        contentStream.setFont(PDType1Font.HELVETICA, 12);
-        contentStream.newLineAtOffset(300,300);
-        contentStream.showText("Adres:"+data.getAddress() );
-        contentStream.endText();
+            contentStream.beginText();
+            contentStream.setFont(font1, 12);
+            contentStream.newLineAtOffset(400, 450);
+            contentStream.showText("İsim : " + data.getAdSoyad());
+            contentStream.endText();
 
-        contentStream.beginText();
-        contentStream.setFont(PDType1Font.HELVETICA, 12);
-        contentStream.newLineAtOffset(300,200);
-        contentStream.showText("Kimlik No:"+data.getTcno() );
-        contentStream.endText();
+            contentStream.beginText();
+            contentStream.setFont(font1, 12);
+            contentStream.newLineAtOffset(400, 400);
+            contentStream.showText("Kimlik No : " + data.getTcno());
+            contentStream.endText();
 
-        contentStream.close();
+            contentStream.beginText();
+            contentStream.setFont(font1, 12);
+            contentStream.newLineAtOffset(400, 350);
+            contentStream.showText("Telefon : " + data.getTelefon());
+            contentStream.endText();
 
-        ByteArrayOutputStream baos=new ByteArrayOutputStream();
-        document.save(baos);
-        document.close();
+            contentStream.beginText();
+            contentStream.setFont(font1, 12);
+            contentStream.newLineAtOffset(400, 300);
+            contentStream.showText("Adres : " + data.getAdres());
+            contentStream.endText();
 
-        return baos.toByteArray();
+            contentStream.beginText();
+            contentStream.setFont(font1, 12);
+            contentStream.newLineAtOffset(400, 250);
+            contentStream.showText("Mezun Olunan Okul : " + data.getMezunOkul());
+            contentStream.endText();
+
+
+            contentStream.close();
+
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            document.save(baos);
+            document.close();
+
+            return baos.toByteArray();
+        } catch (IOException e) {
+
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
+    @Override
+    public byte[] generateOnurBelgesi(OnurBelgesiContent data) throws IOException {
+        return null;
     }
 
 

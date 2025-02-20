@@ -9,13 +9,13 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PDFContent {
+public class TanitimBelgesiContent {
 
-  private String name;
-  private String surname;
+  private String adSoyad;
   private String tcno;
-  private String address;
-  private String phone;
+  private String adres;
+  private String telefon;
+  private String mezunOkul;
 
 
 }

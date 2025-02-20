@@ -1,8 +1,11 @@
 package com.example.PDFTool.service;
 
+import com.example.PDFTool.factory.ımpl.OnurBelgesi;
 import com.example.PDFTool.factory.ımpl.TanitimBelgesi;
 import com.example.PDFTool.factory.PDFGenerator;
-import com.example.PDFTool.model.PDFContent;
+import com.example.PDFTool.model.OnurBelgesiContent;
+import com.example.PDFTool.model.TanitimBelgesiContent;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -11,15 +14,21 @@ import java.io.IOException;
 public class PDFService {
 
 
-    private final PDFGenerator pdfGenerator;
+    private final PDFGenerator tanitimbelgesiGenerator;
+    private final PDFGenerator onurbelgesiGenerator;
 
-    public PDFService() {
-        this.pdfGenerator = new TanitimBelgesi();
+    @Autowired
+    public PDFService(TanitimBelgesi tanitimbelgesiGenerator, OnurBelgesi onurbelgesiGenerator) {
+        this.tanitimbelgesiGenerator = tanitimbelgesiGenerator;
+        this.onurbelgesiGenerator = onurbelgesiGenerator;
     }
 
-    public byte[] createPDF(PDFContent request) throws IOException {
+    public byte[] generateTanitimBelgesi(TanitimBelgesiContent request) throws IOException {
+        return tanitimbelgesiGenerator.generateTanitimBelgesi(request);
+    }
 
-        return pdfGenerator.generatePDF(request);
+    public byte[] generateOnurBelgesi(OnurBelgesiContent request) throws IOException {
+        return onurbelgesiGenerator.generateOnurBelgesi(request);
     }
 
 }
