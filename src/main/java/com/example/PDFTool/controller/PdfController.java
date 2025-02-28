@@ -1,8 +1,10 @@
 package com.example.PDFTool.controller;
 
+import com.example.PDFTool.factory.PDFFactory;
+import com.example.PDFTool.factory.PDFGenerator;
+import com.example.PDFTool.factory.PDFType;
 import com.example.PDFTool.model.OnurBelgesiContent;
 import com.example.PDFTool.model.TanitimBelgesiContent;
-import com.example.PDFTool.service.PDFService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,18 +19,21 @@ import java.io.IOException;
 public class PdfController {
 
     @Autowired
-    PDFService pdfService;
+    PDFFactory pdfFactory;
+
 
     @PostMapping("/onurbelgesi")
     public ResponseEntity<byte[]> generateOnurBelgesi(@RequestBody OnurBelgesiContent data) {
         try {
 
-            byte[] pdfContent = pdfService.generateOnurBelgesi(data);
+            PDFGenerator generator=pdfFactory.createPDFGenerator(PDFType.ONUR_BELGESI);
+            byte[] pdfContent = generator.generateOnurBelgesi(data);
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_PDF);
             headers.setContentDisposition(ContentDisposition.builder("attachment")
                     .filename("onurbelgesi.pdf").build());
+
             return new ResponseEntity<>(pdfContent, headers, HttpStatus.OK);
 
         } catch (IOException e) {
@@ -40,7 +45,8 @@ public class PdfController {
     @PostMapping("/tanitimbelgesi")
     public ResponseEntity<byte[]> generateTanitimBelgesi(@RequestBody TanitimBelgesiContent data) {
         try {
-            byte[] pdfContent = pdfService.generateTanitimBelgesi(data);
+            PDFGenerator generator=pdfFactory.createPDFGenerator(PDFType.TANITIM_BELGESI);
+            byte[] pdfContent = generator.generateTanitimBelgesi(data);
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_PDF);

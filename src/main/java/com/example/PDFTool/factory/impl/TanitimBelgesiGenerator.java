@@ -1,24 +1,21 @@
-package com.example.PDFTool.factory.ımpl;
+package com.example.PDFTool.factory.impl;
 
 import com.example.PDFTool.factory.PDFGenerator;
 import com.example.PDFTool.model.OnurBelgesiContent;
 import com.example.PDFTool.model.TanitimBelgesiContent;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDType0Font;
-import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
 @Component
-public class TanitimBelgesi implements PDFGenerator {
+public class TanitimBelgesiGenerator implements PDFGenerator {
 
     @Override
     public byte[] generateTanitimBelgesi(TanitimBelgesiContent data) throws IOException {
@@ -26,7 +23,10 @@ public class TanitimBelgesi implements PDFGenerator {
         try {
 
 
-            PDDocument document = PDDocument.load(new File("C:/Users/Umut/Desktop/Staj/PDFTool/src/main/resources/templates/tanitimbelgesi.pdf"));
+            ClassPathResource pdfTemplate = new ClassPathResource("templates/tanitimbelgesi.pdf");
+            InputStream inputStream = pdfTemplate.getInputStream();
+            PDDocument document = PDDocument.load(inputStream);
+            PDPage page = document.getPage(0);
 
             InputStream fontStream = new ClassPathResource("templates/fonts/OpenSans-Bold.ttf").getInputStream();
             InputStream fontStream1 = new ClassPathResource("templates/fonts/open_sans.ttf").getInputStream();
